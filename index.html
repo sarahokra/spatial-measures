@@ -935,7 +935,7 @@ const Model = (function () {
         '<li>' + pinGlyph + 'Home</li><li>' + featGlyph('park') + 'Park</li>';
     },
     tools() {
-      return sliderTool({ label: 'Street links removed', min: 0, max: 40, step: 1, val: S.con.pct, out: S.con.pct + '%', chips: [[0, 'Full grid'], [15, '15%'], [30, '30%']] }) +
+      return sliderTool({ label: 'Street links removed', min: 0, max: 50, step: 1, val: S.con.pct, out: S.con.pct + '%', chips: [[0, 'Full grid'], [15, '15%'], [30, '30%'], [50, '50%']] }) +
         '<p class="note">This is a simulation: a regular grid of 120 m blocks whose links are removed at random, always keeping every intersection reachable. It stands in for streets that are less connected, such as those with many dead ends.</p>';
     },
     act(a, v) { if (a === 'preset') this.range(+v); },
