@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Five ways to measure the spatial environment around a home</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,500..800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box}
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --page:#F4F6F7; --ink:#14212B; --slate:#52616C; --hair:#D6DDE2; --hair-strong:#B4C0C8; --hover:rgba(20,33,43,.05);
+  --accent:#BF5700; --accent-ink:#9A4600; --accent-tint:rgba(191,87,0,.10); --on-accent:#FFFFFF;
+  --alt:#1B7F9E; --alt-tint:rgba(27,127,158,.12);
+  --land:#E8ECEE; --street:#FFFFFF; --street-casing:#CDD5DA; --water:#B5D5EA;
+  --hw-casing:#67757F; --hw-label:#36434D; --water-label:#3F7196; --label-halo:#E8ECEE;
+  --f-park:#2B8A3E; --f-grocery:#1864AB; --f-fast:#C2255C; --f-clinic:#6741D9; --f-out:#98A5AE; --ring:#FFFFFF;
+  --u0:#56B4E9; --u1:#E69F00; --u2:#009E73; --u3:#CC79A7;
+  --bar:#BFCAD1; --tip-bg:#14212B; --tip-fg:#F4F6F7; --tip-accent:#FFBE8C;
+  --font-display:'Bricolage Grotesque','Segoe UI',system-ui,-apple-system,sans-serif;
+  --font-body:'Atkinson Hyperlegible',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --page:#0E1820; --ink:#E8EEF2; --slate:#A2B2BD; --hair:#26363F; --hair-strong:#3B4E5A; --hover:rgba(232,238,242,.07);
+    --accent:#F2872F; --accent-ink:#F7A45E; --accent-tint:rgba(242,135,47,.16); --on-accent:#1A0F05;
+    --alt:#5CB8D6; --alt-tint:rgba(92,184,214,.16);
+    --land:#182630; --street:#31434F; --street-casing:#0F1A21; --water:#1B3C53;
+    --hw-casing:#080F14; --hw-label:#CBD8E0; --water-label:#78AACB; --label-halo:#182630;
+    --f-park:#54C971; --f-grocery:#56A9F5; --f-fast:#F26A96; --f-clinic:#A48DF7; --f-out:#5A6A75; --ring:#0E1820;
+    --u0:#6CC1F0; --u1:#F0B429; --u2:#2EC49A; --u3:#DD90BC;
+    --bar:#3B4C57; --tip-bg:#E8EEF2; --tip-fg:#0E1820; --tip-accent:#9A4600;
+  }
+}
+:root[data-theme="dark"]{
+  --page:#0E1820; --ink:#E8EEF2; --slate:#A2B2BD; --hair:#26363F; --hair-strong:#3B4E5A; --hover:rgba(232,238,242,.07);
+  --accent:#F2872F; --accent-ink:#F7A45E; --accent-tint:rgba(242,135,47,.16); --on-accent:#1A0F05;
+  --alt:#5CB8D6; --alt-tint:rgba(92,184,214,.16);
+  --land:#182630; --street:#31434F; --street-casing:#0F1A21; --water:#1B3C53;
+  --hw-casing:#080F14; --hw-label:#CBD8E0; --water-label:#78AACB; --label-halo:#182630;
+  --f-park:#54C971; --f-grocery:#56A9F5; --f-fast:#F26A96; --f-clinic:#A48DF7; --f-out:#5A6A75; --ring:#0E1820;
+  --u0:#6CC1F0; --u1:#F0B429; --u2:#2EC49A; --u3:#DD90BC;
+  --bar:#3B4C57; --tip-bg:#E8EEF2; --tip-fg:#0E1820; --tip-accent:#9A4600;
+}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--page);color:var(--ink);font:400 16px/1.5 var(--font-body)}
+button{font-family:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.app{max-width:1720px;margin:0 auto;padding:clamp(18px,2.4vw,34px) max(clamp(16px,3vw,52px),env(safe-area-inset-right,0px)) 72px max(clamp(16px,3vw,52px),env(safe-area-inset-left,0px))}
+h1{font:700 clamp(28px,3.6vw,52px)/1.04 var(--font-display);letter-spacing:-.022em;margin:0;text-wrap:balance}
+.lede{margin:10px 0 0;font-size:clamp(17px,1.7vw,23px);color:var(--slate);max-width:62ch}
+
+/* ---------- measure tabs ---------- */
+.tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));margin-top:clamp(18px,2.2vw,30px);border-bottom:1px solid var(--hair-strong)}
+.tab{display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:10px 12px 12px;background:none;border:0;border-bottom:4px solid transparent;margin-bottom:-1px;color:var(--slate);text-align:left;cursor:pointer}
+.tab:hover{background:var(--hover)}
+.tab .tn{font:700 clamp(17px,1.6vw,22px)/1.1 var(--font-display);color:var(--ink);letter-spacing:-.01em}
+.tab .tq{font-size:15px;line-height:1.3;color:var(--ink)}
+.tab .tc{font-size:13.5px;line-height:1.25;font-weight:700;color:var(--accent-ink)}
+.tab[aria-pressed="true"]{border-bottom-color:var(--accent);background:var(--accent-tint)}
+@media (max-width:1000px){.tabs{grid-template-columns:repeat(5,minmax(168px,1fr));overflow-x:auto}}
+
+.bench{display:grid;grid-template-columns:minmax(440px,540px) minmax(0,1fr);gap:clamp(24px,3vw,52px);margin-top:clamp(20px,2.4vw,34px);align-items:start}
+
+/* ---------- left panel ---------- */
+.finding{font:600 clamp(20px,1.7vw,26px)/1.22 var(--font-display);letter-spacing:-.01em;margin:0;max-width:30em;text-wrap:balance}
+.finding-sub{margin:6px 0 14px;color:var(--slate);font-size:15px;max-width:44em}
+.tablewrap{overflow-x:auto}
+table.rd{width:100%;border-collapse:collapse}
+.rd caption{text-align:left}
+.rd thead th{padding:4px 8px 8px 0;text-align:left;vertical-align:bottom;font:700 13px/1.2 var(--font-body);color:var(--slate);border-bottom:1px solid var(--hair-strong)}
+.rd td,.rd tbody th{padding:9px 8px 9px 0;border-top:1px solid var(--hair);vertical-align:middle;text-align:left;font-weight:400}
+.rd tbody tr:first-child td,.rd tbody tr:first-child th{border-top:0}
+.rd tfoot td,.rd tfoot th{padding:10px 8px 6px 0;border-top:2px solid var(--hair-strong);text-align:left;font-weight:700}
+.rd .rl{font-weight:700;display:flex;align-items:center;gap:9px;line-height:1.2}
+.rd .rl small{display:block;font-weight:400;font-size:13px;color:var(--slate)}
+.rd tr.sel > *{background:var(--accent-tint)}
+.rd tr.sel > :first-child{box-shadow:inset 4px 0 0 var(--accent);padding-left:12px}
+.rd tr.selalt > *{background:var(--alt-tint)}
+.rd .hint2{font-size:13px;color:var(--slate);font-weight:400}
+.rowbtn{display:flex;align-items:center;gap:9px;width:100%;padding:0;background:none;border:0;color:inherit;font:inherit;text-align:left;cursor:pointer;font-weight:700;line-height:1.2}
+.num{display:block;font:600 18px/1.1 var(--font-display);font-variant-numeric:tabular-nums}
+.num.sm{font-size:16px}
+.bar{display:block;height:4px;margin-top:5px;border-radius:2px;background:var(--accent);width:calc(var(--w,0) * .5px);max-width:100%;transition:width .3s ease}
+.bar.alt{background:var(--alt)}
+.sw{width:14px;height:14px;border-radius:3px;flex:none;display:inline-block}
+.fg{width:16px;height:16px;flex:none;overflow:visible}
+.fg *{stroke:var(--ring);stroke-width:1.4px;vector-effect:non-scaling-stroke}
+.fg-park *{fill:var(--f-park)} .fg-grocery *{fill:var(--f-grocery)} .fg-fast *{fill:var(--f-fast)} .fg-clinic *{fill:var(--f-clinic)}
+.fg-pin *{fill:var(--ink)}
+.fg-out *{fill:var(--f-out)}
+.rowbtn small{display:block;font-weight:400;font-size:13px;color:var(--slate)}
+.mapframe svg{user-select:none;-webkit-user-select:none}
+.fg-nd3 *{fill:var(--f-grocery)} .fg-nd1 *{fill:var(--f-fast)}
+.ln-g{width:26px;height:14px;flex:none;overflow:visible}
+.ln-g path{fill:none;stroke-linecap:round}
+
+.about{margin-top:26px;padding-top:18px;border-top:1px solid var(--hair-strong)}
+.about h2{margin:0 0 8px;font:700 clamp(21px,1.7vw,26px)/1.12 var(--font-display);letter-spacing:-.01em}
+.about p{margin:0 0 10px;max-width:60ch}
+.about b{font-weight:700}
+
+/* ---------- map ---------- */
+.mapframe{position:relative;border:1px solid var(--hair-strong);border-radius:6px;overflow:hidden;background:var(--land);aspect-ratio:4000/2600;touch-action:manipulation}
+.mapframe svg{display:block;width:100%;height:100%}
+.mapframe.clickable svg{cursor:crosshair}
+.land{fill:var(--land)}
+.creek{fill:none;stroke:var(--water);stroke-width:60;stroke-linejoin:round;stroke-linecap:round}
+.st-c,.st,.br-c,.br{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.st-c{stroke:var(--street-casing);stroke-width:22}
+.st{stroke:var(--street);stroke-width:14}
+.br-c{stroke:var(--hw-casing);stroke-width:34;stroke-opacity:.85;stroke-linecap:butt} .br{stroke:var(--street);stroke-width:20;stroke-linecap:butt}
+.gone{fill:none;stroke:var(--hw-label);stroke-opacity:.4;stroke-width:6;stroke-dasharray:5 14;stroke-linecap:round}
+.lbl{font-family:var(--font-body);font-weight:700}
+.crl{fill:var(--water-label);font-style:italic}
+.sb-bg{fill:var(--land);fill-opacity:.88} .sb-a{fill:var(--ink)} .sb-b{fill:var(--land);stroke:var(--ink)} .sb-t{font-family:var(--font-body);font-weight:700;fill:var(--ink)}
+
+.b-fill{fill:var(--accent);fill-opacity:.14;stroke:none}
+.b-case{fill:none;stroke:var(--ring);stroke-linejoin:round;stroke-opacity:.95}
+.b-line{fill:none;stroke:var(--accent);stroke-linejoin:round}
+.alt .b-fill{fill:var(--alt)} .alt .b-line{stroke:var(--alt)}
+
+.pl{cursor:default}
+.pl .shape{fill:var(--c);stroke:var(--ring);stroke-width:1.7px;vector-effect:non-scaling-stroke}
+.pl .hit{fill:transparent;stroke:none}
+.t-park{--c:var(--f-park)} .t-grocery{--c:var(--f-grocery)} .t-fast{--c:var(--f-fast)} .t-clinic{--c:var(--f-clinic)}
+.pl.out{--c:var(--f-out)} .pl.out .shape{fill-opacity:.85}
+.pin-shape{fill:var(--ink);stroke:var(--ring);stroke-width:2px;vector-effect:non-scaling-stroke;stroke-linejoin:round}
+.pin-lbl{font-family:var(--font-body);font-weight:700;fill:var(--ink);paint-order:stroke;stroke:var(--label-halo);stroke-linejoin:round}
+.dest{fill:var(--f-park);stroke:var(--ring);vector-effect:non-scaling-stroke}
+.route{fill:none;stroke:var(--ink);stroke-linecap:round;stroke-linejoin:round}
+.sline{fill:none;stroke:var(--accent);stroke-linecap:round}
+.ringn{fill:none;stroke:var(--ink)} .ringe{fill:none;stroke:var(--accent)}
+.nd3{fill:var(--f-grocery);stroke:var(--ring);vector-effect:non-scaling-stroke;stroke-width:1px}
+.nd1{fill:var(--f-fast);stroke:var(--ring);vector-effect:non-scaling-stroke;stroke-width:1.4px}
+
+.cell{stroke:var(--land);vector-effect:non-scaling-stroke;stroke-width:1px}
+.u0{fill:var(--u0)} .u1{fill:var(--u1)} .u2{fill:var(--u2)} .u3{fill:var(--u3)}
+.cl{font-family:var(--font-body);font-weight:700;fill:#14212B;pointer-events:none;text-anchor:middle}
+.unit{fill:var(--accent);stroke:var(--hair-strong);vector-effect:non-scaling-stroke;stroke-width:1.2px}
+.unit.touch{stroke:var(--ink);stroke-width:3px}
+.ul{font-family:var(--font-body);font-weight:700;fill:var(--ink);paint-order:stroke;stroke:var(--label-halo);stroke-linejoin:round;text-anchor:middle;pointer-events:none}
+.ul2{font-weight:400}
+.cdot{stroke:var(--ink);vector-effect:non-scaling-stroke;stroke-width:1.6px}
+
+.tip{position:absolute;z-index:3;pointer-events:none;max-width:290px;padding:9px 12px 10px;border-radius:5px;background:var(--tip-bg);color:var(--tip-fg);font-size:14px;line-height:1.4;box-shadow:0 8px 24px rgba(0,0,0,.28)}
+.tip b{display:block;font-size:15.5px;line-height:1.25}
+.tip .st-in{color:var(--tip-accent);font-weight:700}
+.hint{position:absolute;z-index:2;left:12px;top:12px;max-width:min(360px,calc(100% - 24px));padding:10px 13px;border-radius:5px;background:var(--page);border:1.5px solid var(--accent);font-size:15px;line-height:1.4;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+
+.legend{display:flex;flex-wrap:wrap;gap:6px 20px;margin:12px 0 0;padding:0;list-style:none;font-size:14.5px;color:var(--slate)}
+.legend li{display:flex;align-items:center;gap:7px}
+.fine{margin:6px 0 0;font-size:13.5px;color:var(--slate);max-width:80ch}
+
+.tools{margin-top:16px;padding-top:16px;border-top:1px solid var(--hair);display:grid;gap:14px}
+.tool{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px}
+.tool-label{font-weight:700;min-width:9.5em}
+.tool input[type=range]{flex:1 1 220px;max-width:440px;height:30px;accent-color:var(--accent)}
+.tool output{font:600 19px/1 var(--font-display);min-width:4.6em;font-variant-numeric:tabular-nums}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip,.seg button,.btn{font:700 14.5px/1 var(--font-body);color:var(--ink);background:transparent;border:1px solid var(--hair-strong);border-radius:4px;padding:10px 13px;min-height:40px;cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+.chip:hover,.seg button:hover,.btn:hover{background:var(--hover)}
+.chip[aria-pressed="true"],.seg button[aria-pressed="true"],.btn[aria-pressed="true"]{background:var(--accent-tint);border-color:var(--accent);color:var(--accent-ink)}
+.seg{display:inline-flex;flex-wrap:wrap}
+.seg button{border-radius:0;margin-left:-1px}
+.seg button:first-child{border-radius:4px 0 0 4px;margin-left:0}
+.seg button:last-child{border-radius:0 4px 4px 0}
+.seg button[aria-pressed="true"]{position:relative;z-index:1}
+.note{margin:0;color:var(--slate);font-size:14.5px;max-width:66ch}
+
+.foot{margin-top:40px;padding-top:16px;border-top:1px solid var(--hair);color:var(--slate);font-size:14px;max-width:96ch}
+.foot p{margin:0 0 6px}
+
+@media (max-width:1000px){
+  .bench{grid-template-columns:minmax(0,1fr)}
+  .stage{order:-1}
+}
+@media (max-width:600px){
+  .tool-label{min-width:0;flex-basis:100%}
+  .num{font-size:16px}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<main class="app">
+  <header>
+    <h1>How can the spatial environment around a home be measured?</h1>
+    <p class="lede">Five measures, one simulated city. Pick a measure, change the settings, and watch what the numbers say and what they leave out.</p>
+  </header>
+
+  <nav class="tabs" id="tabs" aria-label="Choose a measure"></nav>
+
+  <div class="bench">
+    <section class="panel" aria-label="Results and explanation">
+      <h2 class="finding" id="finding"></h2>
+      <p class="finding-sub" id="findingSub"></p>
+      <div class="tablewrap" id="readout"></div>
+      <div class="about" id="about"></div>
+    </section>
+
+    <section class="stage" aria-label="Map">
+      <div class="mapframe" id="mapframe">
+        <svg id="map" viewBox="0 0 4000 2600" preserveAspectRatio="xMidYMid meet" role="img" aria-labelledby="mapT mapD">
+          <title id="mapT">Map of a simulated city</title>
+          <desc id="mapD">A simulated map that changes with the selected measure. The controls below the map change what is shown, and the table beside it gives the numbers.</desc>
+          <g id="base"></g>
+          <g id="overlay"></g>
+          <g id="dyn"></g>
+          <g id="scale"></g>
+        </svg>
+        <div class="tip" id="tip" hidden></div>
+        <div class="hint" id="hint" hidden></div>
+      </div>
+      <ul class="legend" id="legend"></ul>
+      <p class="fine" id="fine"></p>
+      <div class="tools" id="tools"></div>
+    </section>
+  </div>
+
+  <footer class="foot">
+    <p>Every street, place and resident on this page is simulated for teaching. The numbers show how each measure behaves; they are not benchmarks and do not describe any real place.</p>
+  </footer>
+  <div class="sr" id="live" aria-live="polite"></div>
+</main>
+<noscript>This interactive page needs JavaScript.</noscript>
+<script>
+/* Simulated data and measurement functions. No DOM in this block. All coordinates are metres. */
+const Model = (function () {
+  'use strict';
+  const W = 4000, H = 2600;
+
+  /* ---------- helpers ---------- */
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function gauss(r) {
+    let u = 0;
+    while (u === 0) u = r();
+    const v = r();
+    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  }
+  function segInter(ax, ay, bx, by, cx, cy, dx, dy) {
+    const d1x = bx - ax, d1y = by - ay, d2x = dx - cx, d2y = dy - cy;
+    const den = d1x * d2y - d1y * d2x;
+    if (den === 0) return false;
+    const t = ((cx - ax) * d2y - (cy - ay) * d2x) / den;
+    const u = ((cx - ax) * d1y - (cy - ay) * d1x) / den;
+    return t >= 0 && t <= 1 && u >= 0 && u <= 1;
+  }
+  function crossesLine(ax, ay, bx, by, line) {
+    for (let i = 0; i < line.length - 1; i++) {
+      if (segInter(ax, ay, bx, by, line[i][0], line[i][1], line[i + 1][0], line[i + 1][1])) return true;
+    }
+    return false;
+  }
+  function spline(pts, n) {
+    const out = [];
+    const P = [pts[0]].concat(pts, [pts[pts.length - 1]]);
+    for (let i = 1; i < P.length - 2; i++) {
+      const p0 = P[i - 1], p1 = P[i], p2 = P[i + 1], p3 = P[i + 2];
+      for (let k = 0; k < n; k++) {
+        const t = k / n, t2 = t * t, t3 = t2 * t;
+        const f = (a, b, c, d) => 0.5 * (2 * b + (-a + c) * t + (2 * a - 5 * b + 4 * c - d) * t2 + (-a + 3 * b - 3 * c + d) * t3);
+        out.push([f(p0[0], p1[0], p2[0], p3[0]), f(p0[1], p1[1], p2[1], p3[1])]);
+      }
+    }
+    out.push(pts[pts.length - 1]);
+    return out;
+  }
+  function MinHeap() {
+    const a = [];
+    return {
+      size() { return a.length; },
+      push(k, v) {
+        a.push([k, v]);
+        let i = a.length - 1;
+        while (i > 0) {
+          const p = (i - 1) >> 1;
+          if (a[p][0] <= a[i][0]) break;
+          [a[p], a[i]] = [a[i], a[p]]; i = p;
+        }
+      },
+      pop() {
+        const top = a[0], last = a.pop();
+        if (a.length) {
+          a[0] = last;
+          let i = 0;
+          for (;;) {
+            const l = 2 * i + 1, r = l + 1;
+            let m = i;
+            if (l < a.length && a[l][0] < a[m][0]) m = l;
+            if (r < a.length && a[r][0] < a[m][0]) m = r;
+            if (m === i) break;
+            [a[m], a[i]] = [a[i], a[m]]; i = m;
+          }
+        }
+        return top;
+      }
+    };
+  }
+
+  /* ---------- street graph ---------- */
+  function buildGrid(cols, rows, S, ox, oy, jitter, rand) {
+    const nodes = [], edges = [];
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const edge = c === 0 || r === 0 || c === cols - 1 || r === rows - 1;
+        const j = edge || !jitter ? 0 : jitter;
+        nodes.push({ x: ox + c * S + (j ? (rand() * 2 - 1) * j : 0), y: oy + r * S + (j ? (rand() * 2 - 1) * j : 0), c: c, r: r });
+      }
+    }
+    const id = (c, r) => r * cols + c;
+    const add = (a, b) => edges.push({ a: a, b: b, len: Math.hypot(nodes[a].x - nodes[b].x, nodes[a].y - nodes[b].y), alive: true, bridge: false });
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        if (c + 1 < cols) add(id(c, r), id(c + 1, r));
+        if (r + 1 < rows) add(id(c, r), id(c, r + 1));
+      }
+    }
+    return { nodes: nodes, edges: edges, cols: cols, rows: rows, id: id };
+  }
+  function adjacency(g) {
+    const adj = g.nodes.map(() => []);
+    g.edges.forEach((e, i) => { if (!e.alive) return; adj[e.a].push([e.b, i]); adj[e.b].push([e.a, i]); });
+    return adj;
+  }
+  function reachCount(g, start) {
+    const adj = adjacency(g);
+    const seen = new Uint8Array(g.nodes.length);
+    const st = [start];
+    seen[start] = 1;
+    let n = 1;
+    while (st.length) {
+      const u = st.pop();
+      for (const pair of adj[u]) {
+        const v = pair[0];
+        if (!seen[v]) { seen[v] = 1; n++; st.push(v); }
+      }
+    }
+    return n;
+  }
+  function dijkstra(g, src) {
+    const N = g.nodes.length;
+    const dist = new Float64Array(N).fill(Infinity);
+    const prev = new Int32Array(N).fill(-1);
+    const adj = adjacency(g);
+    const h = MinHeap();
+    dist[src] = 0; h.push(0, src);
+    while (h.size()) {
+      const top = h.pop(), d = top[0], u = top[1];
+      if (d > dist[u]) continue;
+      for (const pair of adj[u]) {
+        const v = pair[0], nd = d + g.edges[pair[1]].len;
+        if (nd < dist[v]) { dist[v] = nd; prev[v] = u; h.push(nd, v); }
+      }
+    }
+    return { dist: dist, prev: prev };
+  }
+  function pathPts(g, prev, to) {
+    const out = [];
+    let k = to;
+    while (k !== -1) { out.push([g.nodes[k].x, g.nodes[k].y]); k = prev[k]; }
+    return out.reverse();
+  }
+  function nearestNode(g, x, y) {
+    let best = -1, bd = 1e18;
+    for (let i = 0; i < g.nodes.length; i++) {
+      const d = (g.nodes[i].x - x) ** 2 + (g.nodes[i].y - y) ** 2;
+      if (d < bd) { bd = d; best = i; }
+    }
+    return best;
+  }
+
+  /* ---------- the simulated city (density and proximity) ---------- */
+  const CITY = (function () {
+    const rand = mulberry32(20260929);
+    const g = buildGrid(41, 27, 100, 0, 0, 14, rand);
+    const creek = spline([[2450, -100], [2436, 450], [2464, 1000], [2440, 1550], [2462, 2100], [2444, 2700]], 14);
+    const hits = [];
+    g.edges.forEach((e, i) => {
+      const a = g.nodes[e.a], b = g.nodes[e.b];
+      if (crossesLine(a.x, a.y, b.x, b.y, creek)) hits.push(i);
+    });
+    const keep = new Set();
+    [650, 1300, 2000].forEach((ty) => {
+      let best = -1, bd = 1e9;
+      hits.forEach((i) => {
+        const e = g.edges[i];
+        const d = Math.abs((g.nodes[e.a].y + g.nodes[e.b].y) / 2 - ty);
+        if (d < bd) { bd = d; best = i; }
+      });
+      if (best >= 0) keep.add(best);
+    });
+    hits.forEach((i) => { if (keep.has(i)) g.edges[i].bridge = true; else g.edges[i].alive = false; });
+    const baseline = reachCount(g, 0);
+    g.edges.forEach((e) => {
+      if (!e.alive || e.bridge) return;
+      if (rand() < 0.07) {
+        e.alive = false;
+        if (reachCount(g, 0) !== baseline) e.alive = true;
+      }
+    });
+    return { g: g, creek: creek, connectedNodes: baseline };
+  })();
+
+  const HOMES = (function () {
+    const g = CITY.g;
+    const a = nearestNode(g, 1150, 1250), b = nearestNode(g, 2950, 1500);
+    return {
+      A: { node: a, x: g.nodes[a].x, y: g.nodes[a].y },
+      B: { node: b, x: g.nodes[b].x, y: g.nodes[b].y }
+    };
+  })();
+
+  const TYPES = {
+    grocery: { n: 22, mix: [0.40, 0.20] },
+    fast: { n: 56, mix: [0.55, 0.15] },
+    park: { n: 16, mix: [0.30, 0.20] },
+    clinic: { n: 14, mix: [0.40, 0.20] }
+  };
+  const CLUSTERS = [[1200, 1250, 520], [2950, 1600, 600]];
+  const PL = (function () {
+    const rand = mulberry32(31415);
+    const g = CITY.g;
+    const used = new Set([HOMES.A.node, HOMES.B.node]);
+    const out = [];
+    Object.keys(TYPES).forEach((t) => {
+      const cfg = TYPES[t];
+      for (let i = 0; i < cfg.n; i++) {
+        for (let tries = 0; tries < 60; tries++) {
+          const r = rand();
+          let x, y;
+          if (r < cfg.mix[0]) { x = CLUSTERS[0][0] + gauss(rand) * CLUSTERS[0][2]; y = CLUSTERS[0][1] + gauss(rand) * CLUSTERS[0][2]; }
+          else if (r < cfg.mix[0] + cfg.mix[1]) { x = CLUSTERS[1][0] + gauss(rand) * CLUSTERS[1][2]; y = CLUSTERS[1][1] + gauss(rand) * CLUSTERS[1][2]; }
+          else { x = rand() * W; y = rand() * H; }
+          x = Math.max(0, Math.min(W, x)); y = Math.max(0, Math.min(H, y));
+          const node = nearestNode(g, x, y);
+          if (used.has(node)) continue;
+          used.add(node);
+          out.push({ id: out.length, type: t, node: node, x: g.nodes[node].x, y: g.nodes[node].y });
+          break;
+        }
+      }
+    });
+    return out;
+  })();
+
+  /* ---------- connectivity: a regular grid whose links are removed one by one ---------- */
+  const G3 = (function () {
+    const rand = mulberry32(4242);
+    const g = buildGrid(31, 21, 120, 200, 100, 0, rand);
+    const E = g.edges.length, N = g.nodes.length;
+    const idx = [];
+    for (let i = 0; i < E; i++) idx.push(i);
+    for (let i = E - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); const t = idx[i]; idx[i] = idx[j]; idx[j] = t; }
+    const order = [];
+    idx.forEach((i) => {
+      g.edges[i].alive = false;
+      if (reachCount(g, 0) === N) order.push(i); else g.edges[i].alive = true;
+    });
+    g.edges.forEach((e) => { e.alive = true; });
+    const width = (g.cols - 1) * 120, height = (g.rows - 1) * 120;
+    // Ten fixed sample points; every pair at least 600 m apart is one "trip" for the mean route-directness indicator.
+    const srand = mulberry32(99);
+    const sample = [];
+    while (sample.length < 10) {
+      const c = 1 + Math.floor(srand() * (g.cols - 2)), r = 1 + Math.floor(srand() * (g.rows - 2));
+      const id = g.id(c, r);
+      if (sample.indexOf(id) === -1) sample.push(id);
+    }
+    const pairs = [];
+    for (let i = 0; i < sample.length; i++) {
+      for (let j = i + 1; j < sample.length; j++) {
+        const a = g.nodes[sample[i]], b = g.nodes[sample[j]];
+        if (Math.hypot(a.x - b.x, a.y - b.y) >= 600) pairs.push([i, j]);
+      }
+    }
+    return { g: g, order: order, E: E, N: N, areaKm2: (width * height) / 1e6, home: g.id(9, 6), dest: g.id(18, 13), sample: sample, pairs: pairs };
+  })();
+  function conMetrics(k) {
+    const g = G3.g;
+    g.edges.forEach((e) => { e.alive = true; });
+    for (let i = 0; i < k; i++) g.edges[G3.order[i]].alive = false;
+    const deg = new Int16Array(g.nodes.length);
+    let len = 0;
+    g.edges.forEach((e) => { if (e.alive) { deg[e.a]++; deg[e.b]++; len += e.len; } });
+    let nodesN = 0, sumDeg = 0, i3 = 0, d1 = 0;
+    for (let i = 0; i < deg.length; i++) {
+      const d = deg[i];
+      if (d !== 2) { nodesN++; sumDeg += d; }
+      if (d >= 3) i3++;
+      if (d === 1) d1++;
+    }
+    const links = sumDeg / 2;
+    const dj = dijkstra(g, G3.home);
+    const A = g.nodes[G3.home], B = g.nodes[G3.dest];
+    const djs = G3.sample.map((n) => dijkstra(g, n));
+    let dsum = 0;
+    G3.pairs.forEach((pr) => {
+      const a = g.nodes[G3.sample[pr[0]]], b = g.nodes[G3.sample[pr[1]]];
+      dsum += djs[pr[0]].dist[G3.sample[pr[1]]] / Math.hypot(a.x - b.x, a.y - b.y);
+    });
+    return {
+      directness: dsum / G3.pairs.length, nPairs: G3.pairs.length,
+      k: k, deg: deg, intersections: i3, deadEnds: d1, nodes: nodesN, links: links,
+      density: i3 / G3.areaKm2, linkNode: links / nodesN, meanLink: len / links,
+      route: dj.dist[G3.dest], straight: Math.hypot(A.x - B.x, A.y - B.y),
+      path: isFinite(dj.dist[G3.dest]) ? pathPts(g, dj.prev, G3.dest) : []
+    };
+  }
+  const CON_BASE = conMetrics(0);
+
+  /* ---------- entropy ---------- */
+  const ECOLS = 20, EROWS = 13, ECELL = 200;
+  const PRESETS = { single: [1, 0, 0, 0], mostly: [0.7, 0.12, 0.09, 0.09], mixed: [0.25, 0.25, 0.25, 0.25] };
+  const PSEED = { single: 1, mostly: 2, mixed: 3 };
+  function genCells(name) {
+    const r = mulberry32(PSEED[name] * 101 + 7), p = PRESETS[name], out = [];
+    for (let i = 0; i < ECOLS * EROWS; i++) {
+      const x = r();
+      let k = 0, c = p[0];
+      while (k < 3 && x >= c) { k++; c += p[k]; }
+      out.push(k);
+    }
+    return out;
+  }
+  function entropy(counts) {
+    const tot = counts.reduce((a, b) => a + b, 0), N = counts.length;
+    const share = counts.map((c) => (tot ? c / tot : 0));
+    const contrib = share.map((p) => (p > 0 ? (-p * Math.log(p)) / Math.log(N) : 0));
+    const h = Math.min(1, Math.max(0, contrib.reduce((a, b) => a + b, 0)));
+    return { tot: tot, share: share, contrib: contrib, H: h };
+  }
+  function entCounts(cells, cx, cy, r) {
+    const counts = [0, 0, 0, 0], inside = [];
+    cells.forEach((k, i) => {
+      const x = (i % ECOLS + 0.5) * ECELL, y = (Math.floor(i / ECOLS) + 0.5) * ECELL;
+      const isIn = Math.hypot(x - cx, y - cy) <= r;
+      inside.push(isIn);
+      if (isIn) counts[k]++;
+    });
+    return { counts: counts, inside: inside };
+  }
+
+  /* ---------- apportionment: census-style units over a 100 m grid of synthetic residents ---------- */
+  const APO = (function () {
+    const rand = mulberry32(777);
+    const CW = 40, CH = 26, C = 100;
+    const rects = [];
+    function split(x0, y0, x1, y1) {
+      const w = x1 - x0, h = y1 - y0;
+      const canV = w >= 6, canH = h >= 6;
+      if (w * h <= 110 || (!canV && !canH)) { rects.push([x0, y0, x1, y1]); return; }
+      const vertical = canV && canH ? w >= h : canV;
+      const f = 0.38 + 0.24 * rand();
+      if (vertical) {
+        const s = Math.min(w - 3, Math.max(3, Math.round(w * f)));
+        split(x0, y0, x0 + s, y1); split(x0 + s, y0, x1, y1);
+      } else {
+        const s = Math.min(h - 3, Math.max(3, Math.round(h * f)));
+        split(x0, y0, x1, y0 + s); split(x0, y0 + s, x1, y1);
+      }
+    }
+    split(0, 0, CW, CH);
+    const units = rects.map((r, i) => {
+      const nc = (r[2] - r[0]) * (r[3] - r[1]);
+      const area = nc * 0.01;
+      const cxm = ((r[0] + r[2]) / 2) * C, cym = ((r[1] + r[3]) / 2) * C;
+      const dens = 1500 + 4000 * rand();
+      const pop = Math.round((area * dens) / 10) * 10;
+      let q = 0.08 + 0.30 * (1 - cxm / W) + (rand() - 0.5) * 0.16;
+      q = Math.max(0.04, Math.min(0.55, q));
+      const low = Math.round(pop * q);
+      return { id: i + 1, x0: r[0] * C, y0: r[1] * C, x1: r[2] * C, y1: r[3] * C, cx: cxm, cy: cym, nc: nc, area: area, pop: pop, low: low, share: low / pop };
+    });
+    const cells = [];
+    units.forEach((u, ui) => {
+      const hx = u.x0 + rand() * (u.x1 - u.x0), hy = u.y0 + rand() * (u.y1 - u.y0);
+      const diag = Math.hypot(u.x1 - u.x0, u.y1 - u.y0);
+      const mine = [];
+      for (let gy = u.y0 / C; gy < u.y1 / C; gy++) {
+        for (let gx = u.x0 / C; gx < u.x1 / C; gx++) {
+          const cx = (gx + 0.5) * C, cy = (gy + 0.5) * C;
+          const d = Math.hypot(cx - hx, cy - hy) / diag;
+          const w = 0.15 + rand() + 2 * Math.max(0, 1 - d * 2.2);
+          mine.push({ cx: cx, cy: cy, u: ui, w: w, v: w * (0.4 + rand()) });
+        }
+      }
+      const sw = mine.reduce((a, c) => a + c.w, 0), sv = mine.reduce((a, c) => a + c.v, 0);
+      mine.forEach((c) => { c.pop = (u.pop * c.w) / sw; c.low = (u.low * c.v) / sv; cells.push(c); });
+    });
+    return { units: units, cells: cells };
+  })();
+  function apoEval(x, y, r) {
+    const U = APO.units;
+    const inside = U.map(() => 0);
+    let tp = 0, tl = 0;
+    APO.cells.forEach((c) => {
+      if (Math.hypot(c.cx - x, c.cy - y) <= r) { inside[c.u]++; tp += c.pop; tl += c.low; }
+    });
+    let ap = 0, al = 0, cp = 0, cl = 0, op = 0, ol = 0;
+    const frac = [], cen = [], any = [];
+    U.forEach((u, i) => {
+      const f = inside[i] / u.nc;
+      frac.push(f);
+      ap += f * u.pop; al += f * u.low;
+      const isCen = Math.hypot(u.cx - x, u.cy - y) <= r;
+      cen.push(isCen);
+      if (isCen) { cp += u.pop; cl += u.low; }
+      const nx = Math.max(u.x0, Math.min(x, u.x1)), ny = Math.max(u.y0, Math.min(y, u.y1));
+      const isAny = Math.hypot(nx - x, ny - y) <= r;
+      any.push(isAny);
+      if (isAny) { op += u.pop; ol += u.low; }
+    });
+    const mk = (p, l) => ({ pop: p, low: l, share: p > 0 ? l / p : null });
+    return { areal: mk(ap, al), centroid: mk(cp, cl), any: mk(op, ol), truth: mk(tp, tl), frac: frac, cen: cen, anyFlags: any };
+  }
+
+  return {
+    W: W, H: H, CITY: CITY, HOMES: HOMES, TYPES: TYPES, PL: PL, G3: G3, CON_BASE: CON_BASE,
+    dijkstra: dijkstra, pathPts: pathPts, nearestNode: nearestNode, conMetrics: conMetrics,
+    ECOLS: ECOLS, EROWS: EROWS, ECELL: ECELL, genCells: genCells, entropy: entropy, entCounts: entCounts,
+    APO: APO, apoEval: apoEval
+  };
+})();
+
+</script>
+<script>
+(function () {
+  'use strict';
+  const Md = Model;
+  const g = Md.CITY.g;
+  const $ = (s, r) => (r || document).querySelector(s);
+  const svg = $('#map'), frame = $('#mapframe'), tip = $('#tip'), tools = $('#tools');
+  const L = { base: $('#base'), overlay: $('#overlay'), dyn: $('#dyn'), scale: $('#scale') };
+  let PX = 5; // world metres per CSS pixel
+
+  /* ---------- small helpers ---------- */
+  const hyp = Math.hypot;
+  const fmtDist = (m) => (m < 1000 ? Math.round(m / 10) * 10 + ' m' : String(Math.round(m / 10) / 100) + ' km');
+  const fmtInt = (n) => Math.round(n).toLocaleString('en-US');
+  const pct1 = (x) => (x * 100).toFixed(1) + '%';
+  const linePath = (line) => 'M' + line.map((p) => Math.round(p[0]) + ' ' + Math.round(p[1])).join('L');
+  const circlePath = (cx, cy, r) => 'M' + Math.round(cx - r) + ' ' + Math.round(cy) + 'A' + r + ' ' + r + ' 0 1 1 ' + Math.round(cx + r) + ' ' + Math.round(cy) + 'A' + r + ' ' + r + ' 0 1 1 ' + Math.round(cx - r) + ' ' + Math.round(cy) + 'Z';
+  const TYPE_ORDER = ['grocery', 'fast', 'park', 'clinic'];
+  const TYPE_LABEL = { grocery: 'Grocery store', fast: 'Fast-food outlet', park: 'Park', clinic: 'Clinic' };
+  const NOUN = { grocery: ['grocery store', 'grocery stores'], fast: ['fast-food outlet', 'fast-food outlets'], park: ['park', 'parks'], clinic: ['clinic', 'clinics'] };
+  const noun = (t, n) => NOUN[t][n === 1 ? 0 : 1];
+  const TYPE_SEG = [['grocery', 'Grocery'], ['fast', 'Fast food'], ['park', 'Parks'], ['clinic', 'Clinics']];
+  const CATS = [
+    { name: 'Residential', letter: 'R' },
+    { name: 'Retail & services', letter: 'S' },
+    { name: 'Office', letter: 'O' },
+    { name: 'Civic & institutional', letter: 'C' }
+  ];
+
+  /* ---------- glyphs ---------- */
+  const SHAPES = {
+    park: '<circle class="shape" r="1"/>',
+    grocery: '<rect class="shape" x="-.92" y="-.92" width="1.84" height="1.84" rx=".18"/>',
+    fast: '<path class="shape" d="M0 -1.2L1.15 .9H-1.15Z" stroke-linejoin="round"/>',
+    clinic: '<path class="shape" d="M-.36 -1.1H.36V-.36H1.1V.36H.36V1.1H-.36V.36H-1.1V-.36H-.36Z"/>'
+  };
+  const HOME_D = 'M0 -1.4L1.35 -.2H.95V1.1H-.95V-.2H-1.35Z';
+  const featGlyph = (t, cls) => '<svg class="fg fg-' + (cls || t) + '" viewBox="-1.4 -1.4 2.8 2.8" aria-hidden="true">' + SHAPES[t === 'out' ? 'park' : t] + '</svg>';
+  const dotGlyph = (cls) => '<svg class="fg fg-' + cls + '" viewBox="-1.4 -1.4 2.8 2.8" aria-hidden="true"><circle r="1"/></svg>';
+  const pinGlyph = '<svg class="fg fg-pin" viewBox="-1.6 -1.7 3.2 3.4" aria-hidden="true"><path d="' + HOME_D + '"/></svg>';
+  const lineGlyph = (color, w, dash) => '<svg class="ln-g" viewBox="0 0 26 14" aria-hidden="true"><path d="M2 7H24" style="stroke:' + color + ';stroke-width:' + w + ';' + (dash ? 'stroke-dasharray:' + dash : '') + '"/></svg>';
+  const swatch = (v, extra) => '<span class="sw" style="background:' + v + ';' + (extra || '') + '"></span>';
+
+  /* ---------- svg builders ---------- */
+  function pinSVG(x, y, d, label) {
+    const s = (10 * PX).toFixed(2), fs = (13 * PX).toFixed(1), sw = (3.6 * PX).toFixed(1);
+    return '<g transform="translate(' + Math.round(x) + ' ' + Math.round(y) + ') scale(' + s + ')"><path class="pin-shape" d="' + d + '"/></g>' +
+      '<text class="pin-lbl" x="' + Math.round(x + 15 * PX) + '" y="' + Math.round(y + 5 * PX) + '" font-size="' + fs + '" stroke-width="' + sw + '">' + label + '</text>';
+  }
+  function bufferSVG(cx, cy, r, cls) {
+    const d = circlePath(cx, cy, r);
+    return '<g class="' + cls + '"><path class="b-fill" d="' + d + '"/><path class="b-case" d="' + d + '" stroke-width="' + (7.4 * PX).toFixed(1) + '"/><path class="b-line" d="' + d + '" stroke-width="' + (3.4 * PX).toFixed(1) + '"/></g>';
+  }
+  function placeG(p, i, isIn, size) {
+    return '<g class="pl t-' + p.type + ' ' + (isIn ? 'in' : 'out') + '" data-i="' + i + '" transform="translate(' + Math.round(p.x) + ' ' + Math.round(p.y) + ') scale(' + size.toFixed(2) + ')"><circle class="hit" r="2.1"/>' + SHAPES[p.type] + '</g>';
+  }
+  function sliderTool(o) {
+    return '<div class="tool"><label class="tool-label" for="rng">' + o.label + '</label>' +
+      '<input id="rng" type="range" min="' + o.min + '" max="' + o.max + '" step="' + o.step + '" value="' + o.val + '" aria-valuetext="' + o.out + '">' +
+      '<output id="rngOut" for="rng">' + o.out + '</output>' +
+      '<div class="chips">' + o.chips.map((c) => '<button type="button" class="chip" data-act="preset" data-v="' + c[0] + '" aria-pressed="' + (o.val === c[0]) + '">' + c[1] + '</button>').join('') + '</div></div>';
+  }
+  function segTool(label, act, opts, cur) {
+    return '<div class="tool"><span class="tool-label" id="lb-' + act + '">' + label + '</span><div class="seg" role="group" aria-labelledby="lb-' + act + '">' +
+      opts.map((o) => '<button type="button" data-act="' + act + '" data-v="' + o[0] + '" aria-pressed="' + (String(cur) === String(o[0])) + '">' + o[1] + '</button>').join('') + '</div></div>';
+  }
+  const cityBaseHTML = (function () {
+    let cache = '';
+    return function () {
+      if (cache) return cache;
+      let local = '', bridges = '';
+      g.edges.forEach((e) => {
+        if (!e.alive) return;
+        const A = g.nodes[e.a], B = g.nodes[e.b];
+        const s = 'M' + Math.round(A.x) + ' ' + Math.round(A.y) + 'L' + Math.round(B.x) + ' ' + Math.round(B.y);
+        if (e.bridge) bridges += s; else local += s;
+      });
+      const cr = linePath(Md.CITY.creek);
+      cache = '<defs><path id="crPath" d="' + cr + '"/></defs><rect class="land" width="4000" height="2600"/><path class="creek" d="' + cr + '"/>' +
+        '<path class="st-c" d="' + local + '"/><path class="st" d="' + local + '"/><path class="br-c" d="' + bridges + '"/><path class="br" d="' + bridges + '"/>';
+      return cache;
+    };
+  })();
+  const plainBase = '<rect class="land" width="4000" height="2600"/>';
+
+  /* ---------- state ---------- */
+  const S = {
+    tab: 'density',
+    den: { type: 'grocery', r: 500 },
+    prox: { who: 'A', node: Md.HOMES.A.node, type: 'park' },
+    con: { pct: 0 },
+    ent: { preset: 'mixed', brush: 0, r: 800, cells: Md.genCells('mixed') },
+    apo: { method: 'areal', r: 700, x: 2000, y: 1300, reveal: false }
+  };
+  const ENT_HOME = [2000, 1300];
+
+  /* ---------- modules ---------- */
+  const M = {};
+
+  /* 1. Density */
+  M.density = {
+    fine: 'Colored symbols fall inside at least one buffer; gray ones fall outside both. Each park is shown as one point. Hover a symbol for its distance from each home.',
+    base: cityBaseHTML,
+    overlay(fs) { return '<text class="lbl crl" font-size="' + fs + '" dx="' + (fs * 1.3).toFixed(1) + '"><textPath href="#crPath" startOffset="14%">Bell Creek</textPath></text>'; },
+    compute() {
+      const r = S.den.r, t = S.den.type, area = (Math.PI * r * r) / 1e6, out = { area: area };
+      ['A', 'B'].forEach((k) => {
+        const H = Md.HOMES[k];
+        let n = 0;
+        Md.PL.forEach((p) => { if (p.type === t && hyp(p.x - H.x, p.y - H.y) <= r) n++; });
+        out[k] = { n: n, dens: n / area };
+      });
+      this.c = out;
+    },
+    head() {
+      const c = this.c, t = S.den.type;
+      return [
+        'Within ' + fmtDist(S.den.r) + ' of home, Home A has ' + c.A.n + ' ' + noun(t, c.A.n) + ' and Home B has ' + c.B.n + '.',
+        'The count shows how many options are available. Dividing that count by the buffer area (' + c.area.toFixed(2) + ' km\u00B2) gives density: ' + c.A.dens.toFixed(1) + ' per km\u00B2 for Home A and ' + c.B.dens.toFixed(1) + ' per km\u00B2 for Home B.'
+      ];
+    },
+    readout() {
+      const c = this.c, mx = Math.max(c.A.n, c.B.n, 1), md = Math.max(c.A.dens, c.B.dens, 0.0001);
+      const row = (k, label, colour, alt) => '<tr><th scope="row"><span class="rl">' + swatch(colour) + label + '</span></th>' +
+        '<td><span class="num">' + c[k].n + '</span><span class="bar' + (alt ? ' alt' : '') + '" style="--w:' + (100 * c[k].n / mx).toFixed(0) + '"></span></td>' +
+        '<td><span class="num">' + c.area.toFixed(2) + '</span></td>' +
+        '<td><span class="num">' + c[k].dens.toFixed(1) + '</span><span class="bar' + (alt ? ' alt' : '') + '" style="--w:' + (100 * c[k].dens / md).toFixed(0) + '"></span></td></tr>';
+      return '<table class="rd"><caption class="sr">Count and density of the selected facility type inside each buffer</caption>' +
+        '<thead><tr><th scope="col"><span class="sr">Home</span></th><th scope="col">' + TYPE_LABEL[S.den.type] + 's inside</th><th scope="col">Buffer area (km\u00B2)</th><th scope="col">Density (per km\u00B2)</th></tr></thead><tbody>' +
+        row('A', 'Home A', 'var(--accent)', false) + row('B', 'Home B', 'var(--alt)', true) + '</tbody></table>';
+    },
+    legend() {
+      return '<li>' + featGlyph(S.den.type) + TYPE_LABEL[S.den.type] + ' inside a buffer</li><li>' + featGlyph('out', 'out') + 'Outside both buffers</li>' +
+        '<li>' + swatch('var(--accent)') + 'Buffer around Home A</li><li>' + swatch('var(--alt)') + 'Buffer around Home B</li>';
+    },
+    tools() {
+      return segTool('Facility type', 'type', TYPE_SEG, S.den.type) +
+        sliderTool({ label: 'Buffer radius', min: 250, max: 1000, step: 50, val: S.den.r, out: fmtDist(S.den.r), chips: [[500, '500 m'], [1000, '1 km']] }) +
+        '<p class="note">Both buffers are circles of the same size, so the comparison is fair. Try a small radius, then a large one: the count can only grow, but the density can rise or fall.</p>';
+    },
+    act(a, v) { if (a === 'type') S.den.type = v; else if (a === 'preset') this.range(+v); },
+    range(v) { S.den.r = v; return fmtDist(v); },
+    dyn() {
+      const r = S.den.r, t = S.den.type, A = Md.HOMES.A, B = Md.HOMES.B, s = 7.6 * PX, inn = [], out = [];
+      Md.PL.forEach((p, i) => {
+        if (p.type !== t) return;
+        const isIn = hyp(p.x - A.x, p.y - A.y) <= r || hyp(p.x - B.x, p.y - B.y) <= r;
+        (isIn ? inn : out).push(placeG(p, i, isIn, s * (isIn ? 1.1 : 0.82)));
+      });
+      return bufferSVG(A.x, A.y, r, '') + bufferSVG(B.x, B.y, r, 'alt') + out.join('') + inn.join('') + pinSVG(A.x, A.y, HOME_D, 'Home A') + pinSVG(B.x, B.y, HOME_D, 'Home B');
+    },
+    tip(el) {
+      const n = el.closest('.pl');
+      if (!n) return null;
+      const p = Md.PL[+n.dataset.i], A = Md.HOMES.A, B = Md.HOMES.B;
+      return '<b>' + TYPE_LABEL[p.type] + '</b>Straight line from Home A: ' + fmtDist(hyp(p.x - A.x, p.y - A.y)) + '<br>Straight line from Home B: ' + fmtDist(hyp(p.x - B.x, p.y - B.y));
+    },
+    about: '<h2>Density: availability</h2>' +
+      '<p><b>What it means:</b> How much of something is available inside a chosen area around a home.</p>' +
+      '<p><b>How we measure it:</b> First, count the places inside the buffer. For example, count the parks, grocery stores, clinics, or fast-food outlets. If we divide that count by the size of the buffer, we get a density such as “parks per km\u00B2.”</p>' +
+      '<p><b>Why it is useful:</b> It lets us compare how many opportunities are available around different homes or neighborhoods.</p>' +
+      '<p><b>Keep in mind:</b> Density tells us how many places are nearby, but not how close the nearest one is. It also does not tell us about quality, price, safety, or whether people actually use those places.</p>'
+  };
+
+  /* 2. Proximity */
+  const PXD = { node: -1, dj: null, rows: null };
+  M.proximity = {
+    clickable: true,
+    fine: 'Click the map to move home to the nearest intersection. Bell Creek can only be crossed at three bridges. Hover a symbol to compare its straight-line distance with the distance along streets.',
+    base: cityBaseHTML,
+    overlay: M.density.overlay,
+    compute() {
+      const node = S.prox.node;
+      if (PXD.node === node) return;
+      const dj = Md.dijkstra(g, node), H = g.nodes[node], rows = {};
+      TYPE_ORDER.forEach((t) => {
+        let be = null, bn = null;
+        Md.PL.forEach((p) => {
+          if (p.type !== t) return;
+          const de = hyp(p.x - H.x, p.y - H.y);
+          if (!be || de < be.d) be = { p: p, d: de };
+          const dn = dj.dist[p.node];
+          if (isFinite(dn) && (!bn || dn < bn.d)) bn = { p: p, d: dn };
+        });
+        rows[t] = { e: be, n: bn };
+      });
+      PXD.node = node; PXD.dj = dj; PXD.rows = rows;
+    },
+    head() {
+      const t = S.prox.type, r = PXD.rows[t], one = NOUN[t][0];
+      if (!r.e || !r.n) return ['No ' + NOUN[t][1] + ' can be reached from this home.', ''];
+      const same = r.e.p.id === r.n.p.id;
+      return [
+        'The nearest ' + one + ' is ' + fmtDist(r.e.d) + ' away in a straight line and ' + fmtDist(r.n.d) + ' away along streets.',
+        same ? 'The same ' + one + ' is nearest by both measures.' : 'A different ' + one + ' is nearest by each measure: the closest one in a straight line is not the closest one on foot.'
+      ];
+    },
+    readout() {
+      const rows = TYPE_ORDER.map((t) => {
+        const r = PXD.rows[t];
+        if (!r.e || !r.n) return '<tr><th scope="row"><span class="rl">' + featGlyph(t) + TYPE_LABEL[t] + '</span></th><td>\u2013</td><td>\u2013</td><td>\u2013</td></tr>';
+        const same = r.e.p.id === r.n.p.id;
+        return '<tr class="' + (S.prox.type === t ? 'sel' : '') + '"><th scope="row"><button type="button" class="rowbtn" data-row="' + t + '" aria-pressed="' + (S.prox.type === t) + '">' + featGlyph(t) +
+          '<span>' + TYPE_LABEL[t] + (same ? '' : '<small>a different one is nearest by each measure</small>') + '</span></button></th>' +
+          '<td><span class="num">' + fmtDist(r.e.d) + '</span></td><td><span class="num">' + fmtDist(r.n.d) + '</span></td>' +
+          '<td><span class="num">' + (r.e.d > 0 ? (r.n.d / r.e.d).toFixed(2) + '\u00D7' : '\u2013') + '</span></td></tr>';
+      }).join('');
+      return '<table class="rd"><caption class="sr">Distance from home to the nearest facility of each type. Select a row to show it on the map.</caption>' +
+        '<thead><tr><th scope="col"><span class="sr">Facility</span></th><th scope="col">Nearest, straight line</th><th scope="col">Nearest, along streets</th><th scope="col">Streets \u00F7 straight</th></tr></thead><tbody>' + rows + '</tbody></table>';
+    },
+    legend() {
+      return '<li>' + featGlyph(S.prox.type) + TYPE_LABEL[S.prox.type] + '</li><li>' + pinGlyph + 'Home</li>' +
+        '<li>' + lineGlyph('var(--accent)', 3, '4 3') + 'Nearest in a straight line</li><li>' + lineGlyph('var(--ink)', 3.5, '') + 'Nearest along streets</li>';
+    },
+    tools() {
+      return segTool('Home', 'who', [['A', 'Home A'], ['B', 'Home B']], S.prox.who) +
+        segTool('Facility type', 'type', TYPE_SEG, S.prox.type) +
+        '<p class="note">Proximity uses only the closest feature, so it ignores everything farther away. Compare it with the density page, where the same places are counted instead.</p>';
+    },
+    act(a, v) {
+      if (a === 'type') S.prox.type = v;
+      else if (a === 'who') { S.prox.who = v; S.prox.node = Md.HOMES[v].node; }
+    },
+    dyn() {
+      const t = S.prox.type, r = PXD.rows[t], H = g.nodes[S.prox.node], s = 7.6 * PX;
+      let h = '';
+      const places = [];
+      Md.PL.forEach((p, i) => { if (p.type === t) places.push(placeG(p, i, true, s * 1.1)); });
+      if (r.n) {
+        h += '<path class="route" d="' + linePath(Md.pathPts(g, PXD.dj.prev, r.n.p.node)) + '" stroke-width="' + (4.2 * PX).toFixed(1) + '"/>';
+      }
+      if (r.e) {
+        h += '<path class="sline" d="M' + Math.round(H.x) + ' ' + Math.round(H.y) + 'L' + Math.round(r.e.p.x) + ' ' + Math.round(r.e.p.y) + '" stroke-width="' + (3 * PX).toFixed(1) + '" stroke-dasharray="' + (8 * PX).toFixed(1) + ' ' + (6 * PX).toFixed(1) + '"/>';
+      }
+      h += places.join('');
+      if (r.e) h += '<circle class="ringe" cx="' + Math.round(r.e.p.x) + '" cy="' + Math.round(r.e.p.y) + '" r="' + (15 * PX).toFixed(1) + '" stroke-width="' + (2.6 * PX).toFixed(1) + '"/>';
+      if (r.n && (!r.e || r.n.p.id !== r.e.p.id)) h += '<circle class="ringn" cx="' + Math.round(r.n.p.x) + '" cy="' + Math.round(r.n.p.y) + '" r="' + (15 * PX).toFixed(1) + '" stroke-width="' + (2.6 * PX).toFixed(1) + '"/>';
+      return h + pinSVG(H.x, H.y, HOME_D, 'Home');
+    },
+    tip(el) {
+      const n = el.closest('.pl');
+      if (!n) return null;
+      const p = Md.PL[+n.dataset.i], H = g.nodes[S.prox.node], e = hyp(p.x - H.x, p.y - H.y), d = PXD.dj.dist[p.node];
+      return '<b>' + TYPE_LABEL[p.type] + '</b>Straight line from home: ' + fmtDist(e) + '<br>Along streets: ' + (isFinite(d) ? fmtDist(d) + (e > 0 ? ' (' + (d / e).toFixed(2) + '\u00D7 the straight line)' : '') : 'no route');
+    },
+    onClick(ev) {
+      const p = toWorld(ev);
+      const node = Md.nearestNode(g, p[0], p[1]);
+      S.prox.node = node;
+      S.prox.who = node === Md.HOMES.A.node ? 'A' : node === Md.HOMES.B.node ? 'B' : 'custom';
+      buildTools();
+      update();
+    },
+    about: '<h2>Proximity: accessibility</h2>' +
+      '<p><b>What it means:</b> How close a person is to a place they may want or need to reach.</p>' +
+      '<p><b>How we measure it:</b> A common approach is to measure the distance from home to the nearest park, store, clinic, or other destination. We can measure a straight line, or we can follow the street network to estimate the distance a person would actually travel.</p>' +
+      '<p><b>Why it is useful:</b> It gives a simple picture of accessibility. A destination may look close on a map but be much farther away once roads, bridges, or other barriers are considered.</p>' +
+      '<p><b>Keep in mind:</b> The closest destination is not always the one people use. Proximity also tells us nothing about the quality, cost, safety, or attractiveness of that destination.</p>'
+  };
+
+  /* 3. Connectivity */
+  M.connectivity = {
+    fine: 'Removed links are shown as dotted lines. The dark line is the shortest route from home to the park along the streets that remain.',
+    base() { return plainBase; },
+    overlay() { return ''; },
+    compute() {
+      const k = Math.min(Md.G3.order.length, Math.round((S.con.pct / 100) * Md.G3.E));
+      this.c = Md.conMetrics(k);
+    },
+    head() {
+      const c = this.c, b = Md.CON_BASE;
+      return [
+        S.con.pct === 0
+          ? 'In the full grid, the average trip is ' + c.directness.toFixed(2) + ' times as long along streets as in a straight line.'
+          : 'With ' + S.con.pct + '% of street links removed, the average trip is ' + c.directness.toFixed(2) + ' times as long as a straight line (' + b.directness.toFixed(2) + ' in the full grid).',
+        'Same streets, same places. Only the number of connections changed. The average is taken over ' + c.nPairs + ' fixed trips between ten sample points.'
+      ];
+    },
+    readout() {
+      const c = this.c;
+      const row = (name, val, sub, reads) => '<tr><th scope="row"><span class="rl"><span>' + name + '<small>' + sub + '</small></span></span></th><td><span class="num">' + val + '</span></td><td>' + reads + '</td></tr>';
+      return '<table class="rd"><caption class="sr">Connectivity indicators for the simulated street network</caption>' +
+        '<thead><tr><th scope="col">Indicator</th><th scope="col">Value</th><th scope="col">How to read it</th></tr></thead><tbody>' +
+        row('Intersection density', c.density.toFixed(1) + ' per km\u00B2', c.intersections + ' intersections \u00F7 ' + Md.G3.areaKm2.toFixed(2) + ' km\u00B2', 'Higher = more connected') +
+        row('Link-node ratio', c.linkNode.toFixed(2), c.links + ' links \u00F7 ' + c.nodes + ' nodes', 'Higher = more connected') +
+        row('Dead ends', String(c.deadEnds), (100 * c.deadEnds / c.nodes).toFixed(1) + '% of nodes', 'Fewer = more connected') +
+        row('Mean link length', Math.round(c.meanLink) + ' m', 'Total street length \u00F7 links', 'Shorter links often mean smaller blocks') +
+        row('Mean route directness', c.directness.toFixed(2), 'Street distance \u00F7 straight line, ' + c.nPairs + ' trips', 'Closer to 1 = more direct') +
+        '</tbody></table>';
+    },
+    legend() {
+      return '<li>' + dotGlyph('nd3') + 'Intersection (3 or more streets)</li><li>' + dotGlyph('nd1') + 'Dead end</li>' +
+        '<li>' + lineGlyph('var(--hw-label)', 3, '2 5') + 'Removed link</li><li>' + lineGlyph('var(--ink)', 3.5, '') + 'Route, home to park</li>' +
+        '<li>' + pinGlyph + 'Home</li><li>' + featGlyph('park') + 'Park</li>';
+    },
+    tools() {
+      return sliderTool({ label: 'Street links removed', min: 0, max: 40, step: 1, val: S.con.pct, out: S.con.pct + '%', chips: [[0, 'Full grid'], [15, '15%'], [30, '30%']] }) +
+        '<p class="note">This is a simulation: a regular grid of 120 m blocks whose links are removed at random, always keeping every intersection reachable. It stands in for streets that are less connected, such as those with many dead ends.</p>';
+    },
+    act(a, v) { if (a === 'preset') this.range(+v); },
+    range(v) { S.con.pct = v; return v + '%'; },
+    dyn() {
+      const c = this.c;
+      let alive = '', dead = '';
+      const G = Md.G3.g;
+      G.edges.forEach((e) => {
+        const A = G.nodes[e.a], B = G.nodes[e.b];
+        const s = 'M' + A.x + ' ' + A.y + 'L' + B.x + ' ' + B.y;
+        if (e.alive) alive += s; else dead += s;
+      });
+      let dots = '';
+      const r3 = (3.2 * PX).toFixed(1), r1 = (4.4 * PX).toFixed(1);
+      for (let i = 0; i < G.nodes.length; i++) {
+        const d = c.deg[i], n = G.nodes[i];
+        if (d >= 3) dots += '<circle class="nd3" cx="' + n.x + '" cy="' + n.y + '" r="' + r3 + '"/>';
+        else if (d === 1) dots += '<circle class="nd1" cx="' + n.x + '" cy="' + n.y + '" r="' + r1 + '"/>';
+      }
+      const H = G.nodes[Md.G3.home], D = G.nodes[Md.G3.dest];
+      const fs = (13 * PX).toFixed(1), sw = (3.6 * PX).toFixed(1);
+      return '<path class="gone" d="' + dead + '"/><path class="st-c" d="' + alive + '"/><path class="st" d="' + alive + '"/>' +
+        dots +
+        '<path class="route" d="' + linePath(c.path) + '" stroke-width="' + (4.2 * PX).toFixed(1) + '"/>' +
+        pinSVG(H.x, H.y, HOME_D, 'Home') +
+        '<circle class="dest" cx="' + D.x + '" cy="' + D.y + '" r="' + (8 * PX).toFixed(1) + '" stroke-width="' + (2 * PX).toFixed(1) + '"/>' +
+        '<text class="pin-lbl" x="' + Math.round(D.x + 15 * PX) + '" y="' + Math.round(D.y + 5 * PX) + '" font-size="' + fs + '" stroke-width="' + sw + '">Park</text>';
+    },
+    tip() { return null; },
+    about: '<h2>Connectivity: the street network</h2>' +
+      '<p><b>What it means:</b> How easily streets connect people from one place to another.</p>' +
+      '<p><b>How we measure it:</b> There is no single connectivity number. Researchers may count intersections, count dead ends, compare the number of street links with intersections, look at block or link length, or compare the real route with the straight-line distance.</p>' +
+      '<p><b>Why it is useful:</b> A more connected street network usually gives people more route choices and can make walking or biking between places more direct.</p>' +
+      '<p><b>Keep in mind:</b> A connected street network is not automatically a good walking environment. Sidewalks, traffic, lighting, safety, and comfort still matter.</p>'
+  };
+
+  /* 4. Entropy */
+  M.entropy = {
+    clickable: true,
+    fine: 'Parcels inside the buffer are colored; the rest are faded. Each parcel is the same size, so shares are shares of parcels. Choose a land use under \u201CPaint parcels\u201D, then click or drag on the map.',
+    base() { return plainBase; },
+    overlay() { return ''; },
+    compute() {
+      const ec = Md.entCounts(S.ent.cells, ENT_HOME[0], ENT_HOME[1], S.ent.r);
+      this.inside = ec.inside;
+      this.e = Md.entropy(ec.counts);
+      this.counts = ec.counts;
+    },
+    head() {
+      const e = this.e;
+      if (!e.tot) return ['No parcels fall inside the buffer.', 'Increase the radius to include parcels.'];
+      return [
+        'Land-use entropy inside the buffer: ' + e.H.toFixed(3) + '.',
+        '0 means one land use only; 1 means the land is split evenly among all four categories.'
+      ];
+    },
+    readout() {
+      const e = this.e, c = this.counts;
+      const rows = CATS.map((cat, i) => '<tr><th scope="row"><span class="rl">' + swatch('var(--u' + i + ')') + cat.name + '</span></th>' +
+        '<td><span class="num sm">' + c[i] + '</span></td>' +
+        '<td><span class="num sm">' + (e.share[i] * 100).toFixed(1) + '%</span><span class="bar" style="--w:' + (e.share[i] * 100).toFixed(0) + '"></span></td>' +
+        '<td><span class="num sm">' + e.contrib[i].toFixed(3) + '</span></td></tr>').join('');
+      return '<p class="note" style="margin:0 0 8px">Entropy = \u2212\u03A3 p\u1D62 \u00B7 ln(p\u1D62) \u00F7 ln(N), with N = 4 categories. Here p\u1D62 is the share of equal-sized parcels in category i.</p>' +
+        '<table class="rd"><caption class="sr">Parcels and entropy contribution by land use inside the buffer</caption>' +
+        '<thead><tr><th scope="col">Land use</th><th scope="col">Parcels</th><th scope="col">Share p\u1D62</th><th scope="col">\u2212p\u1D62 ln(p\u1D62) \u00F7 ln(4)</th></tr></thead><tbody>' + rows + '</tbody>' +
+        '<tfoot><tr><th scope="row">Entropy</th><td>' + e.tot + '</td><td>100%</td><td><span class="num">' + e.H.toFixed(3) + '</span></td></tr></tfoot></table>';
+    },
+    legend() {
+      return CATS.map((c, i) => '<li>' + swatch('var(--u' + i + ')') + c.name + ' (' + c.letter + ')</li>').join('') + '<li>' + pinGlyph + 'Home</li>';
+    },
+    tools() {
+      return segTool('Land-use pattern', 'preset2', [['single', 'Single use'], ['mostly', 'Mostly residential'], ['mixed', 'Evenly mixed']], S.ent.preset) +
+        sliderTool({ label: 'Buffer radius', min: 200, max: 1200, step: 50, val: S.ent.r, out: fmtDist(S.ent.r), chips: [[500, '500 m'], [1000, '1 km']] }) +
+        segTool('Paint parcels', 'brush', CATS.map((c, i) => [i, swatch('var(--u' + i + ')') + c.name]), S.ent.brush) +
+        '<p class="note">The patterns are random draws for teaching (the last one aims for equal shares of the four uses). Painting changes single parcels, so you can test what raises or lowers the score.</p>';
+    },
+    act(a, v) {
+      if (a === 'preset2') { S.ent.preset = v; S.ent.cells = Md.genCells(v); }
+      else if (a === 'brush') S.ent.brush = +v;
+      else if (a === 'preset') this.range(+v);
+    },
+    range(v) { S.ent.r = v; return fmtDist(v); },
+    dyn() {
+      const C = Md.ECELL, cols = Md.ECOLS, fs = (15 * PX).toFixed(1);
+      let h = '';
+      S.ent.cells.forEach((k, i) => {
+        const x = (i % cols) * C, y = Math.floor(i / cols) * C, isIn = this.inside[i];
+        h += '<rect class="cell u' + k + '" x="' + x + '" y="' + y + '" width="' + C + '" height="' + C + '" style="fill-opacity:' + (isIn ? 0.86 : 0.22) + '"/>';
+      });
+      S.ent.cells.forEach((k, i) => {
+        if (!this.inside[i]) return;
+        h += '<text class="cl" x="' + ((i % cols) * C + C / 2) + '" y="' + (Math.floor(i / cols) * C + C / 2 + 5 * PX) + '" font-size="' + fs + '">' + CATS[k].letter + '</text>';
+      });
+      const d = circlePath(ENT_HOME[0], ENT_HOME[1], S.ent.r);
+      h += '<path class="b-case" d="' + d + '" stroke-width="' + (7.4 * PX).toFixed(1) + '"/><path class="b-line" d="' + d + '" stroke-width="' + (3.4 * PX).toFixed(1) + '"/>';
+      return h + pinSVG(ENT_HOME[0], ENT_HOME[1], HOME_D, 'Home');
+    },
+    tip() { return null; },
+    about: '<h2>Entropy: diversity of land use</h2>' +
+      '<p><b>What it means:</b> How mixed different land uses are inside the neighborhood.</p>' +
+      '<p><b>How we measure it:</b> We look at the share of the area in each land-use category, such as residential, retail, office, and civic uses. Entropy combines those shares into one score. In this example, 0 means only one type of land use is present, while 1 means the four land uses are evenly mixed.</p>' +
+      '<p><b>Why it is useful:</b> It gives a quick summary of land-use diversity. A neighborhood with several types of destinations may give residents more reasons to walk between places.</p>' +
+      '<p><b>Keep in mind:</b> A high entropy score only tells us that uses are mixed. It does not tell us whether the mix includes useful destinations, how those destinations are arranged, or whether the streets are safe and pleasant to walk.</p>'
+  };
+
+  /* 5. Apportionment */
+  const METHOD_NAME = { areal: 'Areal weighting', centroid: 'Centroid rule', any: 'Any overlap' };
+  const METHOD_DESC = {
+    areal: 'Each unit counts in proportion to the share of its area inside the buffer.',
+    centroid: 'A unit counts fully if its center is inside the buffer, and not at all otherwise.',
+    any: 'A unit counts fully if any part of it touches the buffer.'
+  };
+  M.apportionment = {
+    clickable: true,
+    fine: 'Each rectangle is a census-style unit with its low-income share. Click the map to move the buffer. Hover a unit for its numbers. Shares inside units are computed on 100 m cells.',
+    base() { return plainBase; },
+    overlay() { return ''; },
+    compute() { this.ev = Md.apoEval(S.apo.x, S.apo.y, S.apo.r); },
+    head() {
+      const e = this.ev, m = S.apo.method, est = e[m];
+      const t = e.truth;
+      return [
+        est.share == null ? 'No units are counted for this method at this location.' : 'Estimated low-income share inside the buffer: ' + pct1(est.share) + ' (' + METHOD_NAME[m].toLowerCase() + ').',
+        (S.apo.reveal && t.share != null ? 'In this simulation the true share is ' + pct1(t.share) + '. ' : '') + 'Data arrive as whole units, but the buffer cuts through them, so the buffer\u2019s value has to be estimated. ' + METHOD_DESC[m]
+      ];
+    },
+    readout() {
+      const e = this.ev, rev = S.apo.reveal, t = e.truth;
+      const row = (key, sel) => {
+        const r = e[key];
+        const diff = rev && r.share != null && t.share != null ? ((r.share - t.share) * 100) : null;
+        return '<tr class="' + (sel ? 'sel' : '') + '"><th scope="row"><span class="rl"><span>' + METHOD_NAME[key] + '</span></span></th>' +
+          '<td><span class="num">' + fmtInt(r.pop) + '</span></td><td><span class="num">' + (r.share == null ? '\u2013' : pct1(r.share)) + '</span></td>' +
+          (rev ? '<td>' + (diff == null ? '\u2013' : (diff >= 0 ? '+' : '\u2212') + Math.abs(diff).toFixed(1) + ' pts') + '</td>' : '') + '</tr>';
+      };
+      const truthRow = rev ? '<tr><th scope="row"><span class="rl"><span>Simulated truth<small>known only because residents are simulated</small></span></span></th><td><span class="num">' + fmtInt(t.pop) + '</span></td><td><span class="num">' + (t.share == null ? '\u2013' : pct1(t.share)) + '</span></td><td>\u2013</td></tr>' : '';
+      return '<table class="rd"><caption class="sr">Estimated residents and low-income share inside the buffer, by method</caption>' +
+        '<thead><tr><th scope="col">Method</th><th scope="col">Residents</th><th scope="col">Low-income share</th>' + (rev ? '<th scope="col">Difference from truth</th>' : '') + '</tr></thead><tbody>' +
+        row('areal', S.apo.method === 'areal') + row('centroid', S.apo.method === 'centroid') + row('any', S.apo.method === 'any') + truthRow + '</tbody></table>';
+    },
+    legend() {
+      return '<li>' + swatch('var(--accent)', 'opacity:.15') + swatch('var(--accent)', 'opacity:.6') + 'Low-income share, lower to higher (simulated)</li>' +
+        '<li>' + pinGlyph + 'Buffer center</li><li>' + swatch('var(--accent)', 'opacity:.3;outline:2px solid var(--accent)') + 'Buffer</li>';
+    },
+    tools() {
+      return segTool('Illustrative method', 'method', [['areal', 'Areal weighting'], ['centroid', 'Centroid rule'], ['any', 'Any overlap']], S.apo.method) +
+        sliderTool({ label: 'Buffer radius', min: 250, max: 1500, step: 50, val: S.apo.r, out: fmtDist(S.apo.r), chips: [[500, '500 m'], [1000, '1 km']] }) +
+        '<div class="tool"><span class="tool-label">Simulated truth</span><div class="chips"><button type="button" class="btn" data-act="reveal" aria-pressed="' + S.apo.reveal + '">' + (S.apo.reveal ? 'Hide the true value' : 'Reveal the true value') + '</button></div></div>' +
+        '<p class="note">These are teaching examples of different ways to estimate the population inside a buffer. Click the map to move the buffer and compare how the estimates change.</p>';
+    },
+    act(a, v) {
+      if (a === 'method') S.apo.method = v;
+      else if (a === 'preset') this.range(+v);
+      else if (a === 'reveal') S.apo.reveal = !S.apo.reveal;
+    },
+    range(v) { S.apo.r = v; return fmtDist(v); },
+    dyn() {
+      const e = this.ev, m = S.apo.method, U = Md.APO.units, f1 = (13 * PX).toFixed(1), f2 = (10.5 * PX).toFixed(1), sw = (3 * PX).toFixed(1);
+      let h = '';
+      U.forEach((u, i) => {
+        h += '<rect class="unit' + (m === 'any' && e.anyFlags[i] ? ' touch' : '') + '" data-u="' + i + '" x="' + u.x0 + '" y="' + u.y0 + '" width="' + (u.x1 - u.x0) + '" height="' + (u.y1 - u.y0) + '" style="fill-opacity:' + (0.06 + u.share * 1.05).toFixed(2) + '"/>';
+      });
+      h += bufferSVG(S.apo.x, S.apo.y, S.apo.r, '');
+      U.forEach((u, i) => {
+        h += '<text class="ul" x="' + Math.round(u.cx) + '" y="' + Math.round(u.cy - 6 * PX) + '" font-size="' + f1 + '" stroke-width="' + sw + '">' + Math.round(u.share * 100) + '%</text>';
+        if (m === 'areal' && e.frac[i] > 0) h += '<text class="ul ul2" x="' + Math.round(u.cx) + '" y="' + Math.round(u.cy + 12 * PX) + '" font-size="' + f2 + '" stroke-width="' + sw + '">' + Math.round(e.frac[i] * 100) + '% inside</text>';
+        if (m === 'centroid') h += '<circle class="cdot" cx="' + Math.round(u.cx) + '" cy="' + Math.round(u.cy + 8 * PX) + '" r="' + (6 * PX).toFixed(1) + '" style="fill:' + (e.cen[i] ? 'var(--accent)' : 'var(--page)') + '"/>';
+      });
+      return h + pinSVG(S.apo.x, S.apo.y, HOME_D, 'Home');
+    },
+    tip(el) {
+      const n = el.closest('.unit');
+      if (!n) return null;
+      const i = +n.dataset.u, u = Md.APO.units[i], e = this.ev;
+      return '<b>Unit ' + u.id + '</b>' + fmtInt(u.pop) + ' residents, ' + fmtInt(u.low) + ' low-income (' + pct1(u.share) + ')<br>Area ' + u.area.toFixed(2) + ' km\u00B2<br>' +
+        Math.round(e.frac[i] * 100) + '% of the unit is inside the buffer';
+    },
+    onClick(ev) {
+      const p = toWorld(ev);
+      S.apo.x = Math.max(0, Math.min(Md.W, p[0]));
+      S.apo.y = Math.max(0, Math.min(Md.H, p[1]));
+      update();
+    },
+    about: '<h2>Apportionment: sociodemographic context</h2>' +
+      '<p><b>What it means:</b> Estimating who lives inside a neighborhood or buffer when the available census-style data come in different geographic units.</p>' +
+      '<p><b>How we measure it:</b> The buffer may cut across several census-style areas, so we need a rule for deciding how much of each area should count. This page shows three illustrative approaches: use the share of each area that falls inside the buffer, include an area when its center falls inside, or include any area that touches the buffer.</p>' +
+      '<p><b>Why it is useful:</b> It lets researchers estimate neighborhood characteristics such as income, education, or population composition for a person-centered buffer.</p>' +
+      '<p><b>Keep in mind:</b> These are estimates. Different rules can give different answers, especially when people are not evenly spread across the larger geographic units.</p>'
+  };
+
+  /* ---------- tabs and rendering ---------- */
+  const TABS = [
+    { id: 'density', name: 'Density', q: 'How many are nearby?', c: 'Availability' },
+    { id: 'proximity', name: 'Proximity', q: 'How close is the nearest?', c: 'Accessibility' },
+    { id: 'connectivity', name: 'Connectivity', q: 'How easy is it to get around?', c: 'Street network' },
+    { id: 'entropy', name: 'Entropy', q: 'How mixed is the land use?', c: 'Diversity' },
+    { id: 'apportionment', name: 'Apportionment', q: 'Who lives inside the buffer?', c: 'Sociodemographic environment' }
+  ];
+  $('#tabs').innerHTML = TABS.map((t) => '<button type="button" class="tab" data-tab="' + t.id + '" aria-pressed="false"><span class="tn">' + t.name + '</span><span class="tq">' + t.q + '</span><span class="tc">' + t.c + '</span></button>').join('');
+
+  function toWorld(ev) {
+    const pt = svg.createSVGPoint();
+    pt.x = ev.clientX; pt.y = ev.clientY;
+    const p = pt.matrixTransform(svg.getScreenCTM().inverse());
+    return [p.x, p.y];
+  }
+  function measureFrame() {
+    const w = svg.getBoundingClientRect().width;
+    if (w > 0) {
+      const np = Md.W / w;
+      if (Math.abs(np - PX) / PX > 0.005) { PX = np; return true; }
+    }
+    return false;
+  }
+  function buildOverlay() {
+    const fs = (11.5 * PX).toFixed(1);
+    L.overlay.innerHTML = M[S.tab].overlay(fs);
+    const bx = 190, by = Md.H - 200, h = 8 * PX, f = fs;
+    L.scale.innerHTML =
+      '<rect class="sb-bg" x="' + (bx - 16 * PX) + '" y="' + (by - 16 * PX) + '" width="' + (1000 + 62 * PX) + '" height="' + (h + 38 * PX) + '" rx="' + 4 * PX + '"/>' +
+      '<rect class="sb-a" x="' + bx + '" y="' + by + '" width="500" height="' + h + '"/>' +
+      '<rect class="sb-b" x="' + (bx + 500) + '" y="' + by + '" width="500" height="' + h + '" stroke-width="' + (1.2 * PX) + '"/>' +
+      '<text class="sb-t" font-size="' + f + '" x="' + bx + '" y="' + (by + h + 15 * PX) + '" text-anchor="middle">0</text>' +
+      '<text class="sb-t" font-size="' + f + '" x="' + (bx + 500) + '" y="' + (by + h + 15 * PX) + '" text-anchor="middle">500 m</text>' +
+      '<text class="sb-t" font-size="' + f + '" x="' + (bx + 1000) + '" y="' + (by + h + 15 * PX) + '" text-anchor="middle">1 km</text>';
+  }
+  function buildTools() { tools.innerHTML = M[S.tab].tools(); }
+  function update() {
+    const m = M[S.tab];
+    if (m.compute) m.compute();
+    const h = m.head();
+    $('#finding').textContent = h[0];
+    $('#findingSub').textContent = h[1];
+    $('#readout').innerHTML = m.readout();
+    $('#legend').innerHTML = m.legend();
+    L.dyn.innerHTML = m.dyn();
+  }
+  function setTab(id) {
+    S.tab = id;
+    const m = M[id];
+    document.querySelectorAll('.tab').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.tab === id)));
+    L.base.innerHTML = m.base();
+    buildOverlay();
+    $('#fine').textContent = m.fine;
+    $('#about').innerHTML = m.about;
+    frame.classList.toggle('clickable', !!m.clickable);
+    tip.hidden = true;
+    buildTools();
+    update();
+    $('#live').textContent = $('#finding').textContent;
+  }
+
+  /* ---------- events ---------- */
+  $('#tabs').addEventListener('click', (e) => {
+    const b = e.target.closest('.tab');
+    if (b && b.dataset.tab !== S.tab) setTab(b.dataset.tab);
+  });
+  tools.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-act]');
+    if (!b || b.disabled) return;
+    const act = b.dataset.act, v = b.dataset.v;
+    M[S.tab].act(act, v);
+    buildTools();
+    update();
+    const again = tools.querySelector('[data-act="' + act + '"][data-v="' + v + '"]') || tools.querySelector('[data-act="' + act + '"]');
+    if (again) again.focus();
+  });
+  tools.addEventListener('input', (e) => {
+    if (e.target.id !== 'rng') return;
+    const v = +e.target.value;
+    const out = M[S.tab].range(v);
+    $('#rngOut').textContent = out;
+    e.target.setAttribute('aria-valuetext', out);
+    tools.querySelectorAll('[data-act="preset"]').forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.v === v)));
+    update();
+  });
+  $('#readout').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-row]');
+    if (!b || S.tab !== 'proximity') return;
+    S.prox.type = b.dataset.row;
+    buildTools();
+    update();
+    const again = $('#readout [data-row="' + b.dataset.row + '"]');
+    if (again) again.focus();
+  });
+  svg.addEventListener('click', (e) => {
+    const m = M[S.tab];
+    if (m.onClick) m.onClick(e);
+  });
+  svg.addEventListener('mousemove', (e) => {
+    const m = M[S.tab];
+    const html = m.tip ? m.tip(e.target) : null;
+    if (!html) { tip.hidden = true; return; }
+    tip.innerHTML = html;
+    tip.hidden = false;
+    const r = frame.getBoundingClientRect();
+    let x = e.clientX - r.left + 16, y = e.clientY - r.top + 16;
+    if (x + tip.offsetWidth > r.width - 6) x = e.clientX - r.left - tip.offsetWidth - 16;
+    if (y + tip.offsetHeight > r.height - 6) y = e.clientY - r.top - tip.offsetHeight - 16;
+    tip.style.left = Math.max(6, x) + 'px';
+    tip.style.top = Math.max(6, y) + 'px';
+  });
+  svg.addEventListener('mouseleave', () => { tip.hidden = true; });
+
+  // painting parcels in the entropy view
+  let painting = false;
+  function paintAt(ev) {
+    const p = toWorld(ev);
+    const c = Math.floor(p[0] / Md.ECELL), r = Math.floor(p[1] / Md.ECELL);
+    if (c < 0 || c >= Md.ECOLS || r < 0 || r >= Md.EROWS) return;
+    const i = r * Md.ECOLS + c;
+    if (S.ent.cells[i] === S.ent.brush) return;
+    S.ent.cells[i] = S.ent.brush;
+    if (S.ent.preset !== 'custom') { S.ent.preset = 'custom'; buildTools(); }
+    update();
+  }
+  svg.addEventListener('pointerdown', (e) => { if (S.tab === 'entropy') { painting = true; paintAt(e); } });
+  svg.addEventListener('pointermove', (e) => { if (S.tab === 'entropy' && painting) paintAt(e); });
+  window.addEventListener('pointerup', () => { painting = false; });
+  window.addEventListener('pointercancel', () => { painting = false; });
+
+  let raf = 0;
+  const onResize = () => {
+    if (raf) return;
+    raf = requestAnimationFrame(() => { raf = 0; if (measureFrame()) { buildOverlay(); update(); } });
+  };
+  if (window.ResizeObserver) new ResizeObserver(onResize).observe(frame); else window.addEventListener('resize', onResize);
+
+  /* ---------- start ---------- */
+  measureFrame();
+  setTab('density');
+})();
+
+</script>
+</body>
+</html>
